@@ -6,4 +6,4 @@ For example, if you have 4000 samples, and the diamond graph has 10 variables. H
 
 ![ising_run](https://github.com/wushanshan/GraphLearn/blob/master/IsingModel/ising_run.png)
 
-The error is the infinity norm of matrix A-A_hat. In the above example, the error = 0.0801 < 0.2/2, which indicates successful recovery.
+The error is the infinity norm of matrix A-A_hat. In the above example, the error = 0.0653 < 0.2/2, which indicates successful recovery.
