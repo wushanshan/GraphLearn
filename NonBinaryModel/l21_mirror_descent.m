@@ -1,0 +1,34 @@
+function w_avg = l21_mirror_descent(X, y, T, W21)
+% Solve the l21-constained logistic regression:
+% min_w \sum_i \ln(1+e^{-y_i<w, x_i>})    s.t. ||w||_{2,1} <= W21
+% where x_i is the n-by-k-dim matrix, y = {-1,1}
+[n, k, N] = size(X);
+X = permute(X, [2 1 3]);
+X = reshape(X, [n*k, N])';  % shape: [N, n*k]
+X = X.*W21;
+y = (y+1)/2;
+w = ones(1,n*k)/(n*sqrt(k));
+w_avg = w;
+p = 1+1./log(n);
+eta = sqrt(2*exp(1)*log(n)/(2*T))/(2*W21);
+eps = 1e-8;
+batch_size = 10;
+for t=1:T
+    grad = zeros(n,k);
+    rand_idx = randi([1,N],1,batch_size);
+    Xs = X(rand_idx, :);
+    ys = y(rand_idx);
+    preds = reshape(logsig(Xs*w'), [1, batch_size])-reshape(ys, [1, batch_size]);
+    grad = preds*Xs/batch_size;
+    grad_mr = grad_mirror(reshape(w,[k,n])');
+    s = reshape(grad_mr', [1, n*k]) - eta*grad;
+    s = reshape(s, [k,n])';
+    s_norm = sqrt(s.^2*ones(k,1));
+    s_unit = diag(1./s_norm)*s;   % normalize each row of s
+    [c, str] = proj_solve(p, s_norm*p/(exp(1)*log(n)), eps);
+    w = diag(c)*s_unit;
+    w = reshape(w', [1,n*k]);
+    w_avg = (w_avg*t + w)/(t+1);
+end
+w_avg = w_avg*W21;
+w_avg = reshape(w_avg, [k,n])';
