@@ -1,4 +1,4 @@
-This folder provides matlab files that can be used to reproduce Figure 1 of our paper.
+This folder provides matlab files to reproduce Figure 1 of our paper.
 
 The main file is 'ising_learn.m'.
 
