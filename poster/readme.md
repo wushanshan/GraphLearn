@@ -1,1 +1,0 @@
-# Poster of our paper
